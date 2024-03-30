@@ -15,7 +15,7 @@ permissions:
   deployments: write
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-22.04
     timeout-minutes: 10
 
