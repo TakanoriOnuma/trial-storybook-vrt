@@ -16,11 +16,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - run: git --no-pager log
-        env:
-          ref_name: ${{ github.ref_name}}
-          head_ref: ${{ github.head_ref }}
-
       - uses: actions/setup-node@v4
         with:
           node-version-file: 'package.json'
@@ -43,6 +38,12 @@ jobs:
         uses: google-github-actions/setup-gcloud@v2
         with:
           project_id: 'trial-storybook-vrt'
+
+      # 比較先のブランチがcheckoutアクション実行時には用意されていないのでgitコマンドを打って取得する
+      - name: workaround for detached HEAD
+        run: git checkout $BRANCH_NAME || git checkout -b $BRANCH_NAME && git pull
+        env:
+          BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
 
       - name: Run Reg-Suit
         run: npm run storybook-vrt:reg-suit
