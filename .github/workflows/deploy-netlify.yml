@@ -8,6 +8,12 @@ on:
     branches-ignore:
       - main
 
+permissions:
+  contents: write
+  pull-requests: write
+  statuses: write
+  deployments: write
+
 jobs:
   build:
     runs-on: ubuntu-22.04
