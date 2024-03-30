@@ -12,7 +12,7 @@ export type CounterProps = {
 
 export const Counter: FC<CounterProps> = ({ count, onChangeCount }) => {
   return (
-    <div style={{ display: 'flex' }}>
+    <div style={{ display: 'flex', fontSize: '18px' }}>
       <button
         onClick={() => {
           onChangeCount(count - 1);
