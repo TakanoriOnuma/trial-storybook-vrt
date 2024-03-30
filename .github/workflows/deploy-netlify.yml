@@ -1,0 +1,51 @@
+name: Deploy to Netlify
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches-ignore:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: 'package.json'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build Storybook
+        run: npm run storybook:build
+
+      - name: Set GitHub Deployment Environment
+        id: github_deployment_environment
+        run: |
+          if [ "$GITHUB_EVENT_NAME" = "push" ]; then
+            echo "GITHUB_DEPLOYMENT_ENVIRONMENT=Netlify Main" >> "${GITHUB_OUTPUT}"
+          else
+            echo "GITHUB_DEPLOYMENT_ENVIRONMENT=Netlify Preview" >> "${GITHUB_OUTPUT}"
+          fi
+
+      - name: Deploy to Netlify
+        uses: nwtgck/actions-netlify@v3.0
+        with:
+          publish-dir: './storybook-static'
+          production-branch: main
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-deployment-environment: ${{ steps.github_deployment_environment.outputs.GITHUB_DEPLOYMENT_ENVIRONMENT }}
+          deploy-message: ${{ github.event.head_commit.message || github.event.pull_request.title }}
+          alias: deploy-preview-${{ github.event.number }}
+          fails-without-credentials: true
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ vars.NETLIFY_SITE_ID }}
