@@ -41,7 +41,7 @@ jobs:
 
       # 比較先のブランチがcheckoutアクション実行時には用意されていないのでgitコマンドを打って取得する
       - name: workaround for detached HEAD
-        run: git checkout $BRANCH_NAME || git checkout -b $BRANCH_NAME && git pull
+        run: git checkout $BRANCH_NAME || (git checkout -b $BRANCH_NAME && git pull)
         env:
           BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
 
