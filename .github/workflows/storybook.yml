@@ -1,22 +1,15 @@
-name: Deploy to Netlify
+# jobを分割して一つのワークフローにまとめる
+name: Storybook
 
 on:
   push:
     branches:
       - main
   pull_request:
-    branches:
-      - main
-
-permissions:
-  contents: write
-  pull-requests: write
-  statuses: write
-  deployments: write
 
 jobs:
-  build-and-deploy:
-    if: ${{ false }}
+  # Storybookをビルドするジョブ
+  build:
     runs-on: ubuntu-22.04
     timeout-minutes: 10
 
@@ -33,6 +26,34 @@ jobs:
 
       - name: Build Storybook
         run: npm run storybook:build
+
+      - name: Upload Storybook
+        uses: actions/upload-artifact@v4
+        with:
+          name: storybook
+          path: storybook-static
+          retention-days: 1
+
+  # ビルドされたStorybookをNetlifyにデプロイするジョブ
+  deploy-to-netlify:
+    needs: build
+    runs-on: ubuntu-22.04
+    timeout-minutes: 10
+
+    permissions:
+      contents: write
+      pull-requests: write
+      statuses: write
+      deployments: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download Storybook
+        uses: actions/download-artifact@v4
+        with:
+          name: storybook
+          path: storybook-static
 
       - name: Set GitHub Deployment Environment
         id: github_deployment_environment
