@@ -1,0 +1,119 @@
+# jobを分割して一つのワークフローにまとめる
+name: Storybook
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  # Storybookをビルドするジョブ
+  build:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: 'package.json'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build Storybook
+        run: npm run storybook:build
+
+      - name: Upload Storybook
+        uses: actions/upload-artifact@v4
+        with:
+          name: storybook
+          path: storybook-static
+          retention-days: 1
+
+  # ビルドされたStorybookをNetlifyにデプロイするジョブ
+  deploy-to-netlify:
+    needs: build
+    runs-on: ubuntu-22.04
+    timeout-minutes: 10
+
+    permissions:
+      contents: write
+      pull-requests: write
+      statuses: write
+      deployments: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download Storybook
+        uses: actions/download-artifact@v4
+        with:
+          name: storybook
+          path: storybook-static
+
+      - name: Set GitHub Deployment Environment
+        id: github_deployment_environment
+        run: |
+          if [ "$GITHUB_EVENT_NAME" = "push" ]; then
+            echo "GITHUB_DEPLOYMENT_ENVIRONMENT=Netlify Main" >> "${GITHUB_OUTPUT}"
+          else
+            echo "GITHUB_DEPLOYMENT_ENVIRONMENT=Netlify Preview" >> "${GITHUB_OUTPUT}"
+          fi
+
+      - name: Deploy to Netlify
+        uses: nwtgck/actions-netlify@v3.0
+        with:
+          publish-dir: './storybook-static'
+          production-branch: main
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-deployment-environment: ${{ steps.github_deployment_environment.outputs.GITHUB_DEPLOYMENT_ENVIRONMENT }}
+          deploy-message: ${{ github.event.head_commit.message || github.event.pull_request.title }}
+          alias: deploy-preview-${{ github.event.number }}
+          fails-without-credentials: true
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ vars.NETLIFY_SITE_ID }}
+
+  # ビルドされたStorybookでVRTをするジョブ
+  vrt:
+    needs: build
+    runs-on: ubuntu-22.04
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.head_ref || github.ref_name }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: 'package.json'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: storybook
+          path: storybook-static
+
+      - name: Run Storycap
+        run: npm run storybook-vrt:storycap
+
+      - uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_CREDENTIALS}}
+
+      - name: Set up GCP credential
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: 'trial-storybook-vrt'
+
+      - name: Run Reg-Suit
+        run: npm run storybook-vrt:reg-suit
