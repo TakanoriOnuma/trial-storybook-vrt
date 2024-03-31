@@ -77,3 +77,43 @@ jobs:
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ vars.NETLIFY_SITE_ID }}
+
+  # ビルドされたStorybookでVRTをするジョブ
+  vrt:
+    needs: build
+    runs-on: ubuntsu-22.04
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.head_ref || github.ref_name}}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: 'package.json'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: storybook
+          path: storybook-static
+
+      - name: Run Storycap
+        run: npm run storybook-vrt:storycap
+
+      - uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_CREDENTIALS}}
+
+      - name: Set up GCP credential
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: 'trial-storybook-vrt'
+
+      - name: Run Reg-Suit
+        run: npm run storybook-vrt:reg-suit

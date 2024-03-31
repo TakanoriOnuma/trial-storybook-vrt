@@ -16,6 +16,7 @@ permissions:
 
 jobs:
   build-and-deploy:
+    # storybook.ymlにまとめたので一旦falseにする
     if: ${{ false }}
     runs-on: ubuntu-22.04
     timeout-minutes: 10
