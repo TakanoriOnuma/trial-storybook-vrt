@@ -81,7 +81,7 @@ jobs:
   # ビルドされたStorybookでVRTをするジョブ
   vrt:
     needs: build
-    runs-on: ubuntsu-22.04
+    runs-on: ubuntu-22.04
     timeout-minutes: 10
 
     steps:
