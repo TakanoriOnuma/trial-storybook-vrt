@@ -122,4 +122,4 @@ jobs:
           project_id: 'trial-storybook-vrt'
 
       - name: Run Reg-Suit
-        run: npm run storybook-vrt:reg-suit
+        run: npm run storybook-vrt:reg-suit -- --verbose
