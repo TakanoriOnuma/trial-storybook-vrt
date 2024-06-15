@@ -1,5 +1,5 @@
 {
-  "name": "@reg-plugins/reg-notify-github-pr-plugin",
+  "name": "@reg-plugins/reg-notify-github-by-token-plugin",
   "private": true,
   "main": "dist/index.js",
   "scripts": {
