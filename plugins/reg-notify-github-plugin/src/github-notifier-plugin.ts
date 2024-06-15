@@ -3,9 +3,51 @@ import {
   NotifyParams,
   PluginCreateOptions,
   Logger,
+  ComparisonResult,
 } from 'reg-suit-interface';
 
 import { Octokit } from '@octokit/rest';
+
+/**
+ * レポートの内容を生成する
+ */
+const generateReportMessage = ({
+  section,
+  comparisonResult,
+  reportUrl,
+}: {
+  section?: string;
+  comparisonResult: ComparisonResult;
+  reportUrl?: string;
+}) => {
+  const { newItems, diffItems, deletedItems, passedItems } = comparisonResult;
+
+  const vrtLabel = section ? `${section}のVRT` : 'VRT';
+
+  if (
+    newItems.length === 0 &&
+    diffItems.length === 0 &&
+    deletedItems.length === 0
+  ) {
+    return `${vrtLabel}に差分はありません :sparkles:`;
+  }
+
+  const messages = [`${vrtLabel}に差分があります。`];
+  messages.push(
+    '| :red_circle: Changed | :white_circle: New | :black_circle: Deleted | :large_blue_circle: Passing |',
+    '| --- | --- | --- | --- |',
+    `| ${diffItems.length} | ${newItems.length} | ${deletedItems.length} | ${passedItems.length} |`,
+  );
+
+  if (reportUrl) {
+    messages.push(
+      '',
+      `[レポート](${reportUrl})を確認してください。`,
+      '- [ ] 差分に問題ないことを確認しました',
+    );
+  }
+  return messages.join('\n');
+};
 
 export interface GitHubPluginOption {
   /** PRにコメントするためのGitHub Token */
@@ -64,8 +106,12 @@ export class GitHubNotifierPlugin
     });
 
     console.log('=========');
-    const contentMessage = reportUrl ?? '';
-    const message = `${identifierMessage}\n${contentMessage}`;
+    const reportMessage = generateReportMessage({
+      section: this._section,
+      comparisonResult,
+      reportUrl,
+    });
+    const message = `${identifierMessage}\n${reportMessage}`;
 
     if (existingComment) {
       const result = await octokit.rest.issues.updateComment({
