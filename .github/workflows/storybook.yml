@@ -115,5 +115,8 @@ jobs:
         with:
           project_id: 'trial-storybook-vrt'
 
+      - name: Build Plugin
+        run: npm run -w @reg-plugins/reg-notify-github-pr-plugin build
+
       - name: Run Reg-Suit
         run: npm run storybook-vrt:reg-suit
