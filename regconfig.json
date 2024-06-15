@@ -11,10 +11,9 @@
   "plugins": {
     "reg-keygen-git-hash-plugin": true,
     "@reg-plugins/reg-notify-github-pr-plugin": {
-      "token": "${GITHUB_REPOSITORY_ACCESS_TOKEN}",
-      "repoName": "${GITHUB_PROJECT_REPONAME}",
-      "repoOwner": "${GITHUB_PROJECT_USERNAME}",
-      "prNumber": "${GITHUB_PR_NUMBER}",
+      "GITHUB_TOKEN": "${GITHUB_TOKEN}",
+      "GITHUB_REPOSITORY": "${GITHUB_REPOSITORY}",
+      "GITHUB_PR_NUMBER": "${GITHUB_PR_NUMBER}",
       "prComment": true,
       "prCommentBehavior": "default",
       "setCommitStatus": false,
