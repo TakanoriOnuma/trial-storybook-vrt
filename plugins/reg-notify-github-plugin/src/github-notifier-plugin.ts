@@ -23,21 +23,17 @@ export class GitHubNotifierPlugin
 {
   private _logger!: Logger;
   private _GITHUB_TOKEN!: string;
-  private _GITHUB_REPOSITORY!: string;
   private _GITHUB_REPO_OWNER!: string;
   private _GITHUB_REPO_NAME!: string;
-  private _GITHUB_PR_NUMBER!: string;
+  private _GITHUB_PR_NUMBER!: number;
 
   init(config: PluginCreateOptions<GitHubPluginOption>) {
     const { logger, options } = config;
     this._logger = logger;
     this._GITHUB_TOKEN = options.GITHUB_TOKEN;
-    this._GITHUB_REPOSITORY = `${options.GITHUB_REPO_OWNER}/${options.GITHUB_REPO_NAME}`;
     this._GITHUB_REPO_OWNER = options.GITHUB_REPO_OWNER;
     this._GITHUB_REPO_NAME = options.GITHUB_REPO_NAME;
-    this._GITHUB_PR_NUMBER = options.GITHUB_PR_NUMBER;
-    console.log('初期化するぞ！');
-    console.log(config);
+    this._GITHUB_PR_NUMBER = parseInt(options.GITHUB_PR_NUMBER, 10);
   }
 
   async notify(params: NotifyParams): Promise<any> {
@@ -48,40 +44,21 @@ export class GitHubNotifierPlugin
     const octokit = new Octokit({
       auth: this._GITHUB_TOKEN,
     });
-    const { data: coms } = await octokit.rest.issues.listComments({
+    const { data: comments } = await octokit.rest.issues.listComments({
       owner: this._GITHUB_REPO_OWNER,
       repo: this._GITHUB_REPO_NAME,
-      issue_number: parseInt(this._GITHUB_PR_NUMBER, 10),
+      issue_number: this._GITHUB_PR_NUMBER,
     });
-    console.log(coms);
 
-    const requestHeaders = {
-      Authorization: `token ${this._GITHUB_TOKEN}`,
-    };
-
-    const comments = await fetch(
-      `https://api.github.com/repos/${this._GITHUB_REPOSITORY}/issues/${this._GITHUB_PR_NUMBER}/comments`,
-      { headers: requestHeaders },
-    ).then((res) => {
-      if (!res.ok) {
-        throw new Error(`Failed to fetch comments: ${res.statusText}`);
-      }
-      return res.json();
-    });
     console.log(comments);
 
-    const result = await fetch(
-      `https://api.github.com/repos/${this._GITHUB_REPOSITORY}/issues/${this._GITHUB_PR_NUMBER}/comments`,
-      {
-        method: 'post',
-        body: JSON.stringify({ body: reportUrl }),
-        headers: requestHeaders,
-      },
-    ).then((res) => {
-      if (!res.ok) {
-        throw new Error(`Failed to post comment: ${res.statusText}`);
-      }
-      return res.json();
+    console.log('=========');
+    const message = reportUrl ?? '';
+    const result = await octokit.rest.issues.createComment({
+      owner: this._GITHUB_REPO_OWNER,
+      repo: this._GITHUB_REPO_NAME,
+      issue_number: this._GITHUB_PR_NUMBER,
+      body: message,
     });
     console.log(result);
   }
