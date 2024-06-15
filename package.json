@@ -1,10 +1,14 @@
 {
   "name": "trial-storybook-vrt",
+  "private": true,
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "author": "",
   "license": "MIT",
+  "workspaces": [
+    "plugins/*"
+  ],
   "scripts": {
     "preinstall": "npx only-allow npm",
     "storybook": "storybook dev -p 7100",

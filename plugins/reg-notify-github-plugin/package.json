@@ -1,0 +1,14 @@
+{
+  "name": "@reg-plugins/reg-notify-github-pr-plugin",
+  "private": true,
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json"
+  },
+  "dependencies": {
+    "node-fetch": "^3.3.2"
+  },
+  "devDependencies": {
+    "reg-suit-interface": "^0.14.2"
+  }
+}
