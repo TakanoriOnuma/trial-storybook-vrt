@@ -46,7 +46,12 @@ export class GitHubNotifierPlugin
     const comments = await fetch(
       `https://api.github.com/repos/${this._GITHUB_REPOSITORY}/issues/${this._GITHUB_PR_NUMBER}/comments`,
       { headers: requestHeaders },
-    ).then((res) => res.json());
+    ).then((res) => {
+      if (!res.ok) {
+        throw new Error(`Failed to fetch comments: ${res.statusText}`);
+      }
+      return res.json();
+    });
     console.log(comments);
 
     await fetch(
@@ -56,6 +61,10 @@ export class GitHubNotifierPlugin
         body: JSON.stringify({ body: reportUrl }),
         headers: requestHeaders,
       },
-    );
+    ).then((res) => {
+      if (!res.ok) {
+        throw new Error(`Failed to post comment: ${res.statusText}`);
+      }
+    });
   }
 }
