@@ -44,7 +44,7 @@ export class GitHubNotifierPlugin
     };
 
     const comments = await fetch(
-      `https://api.github.com/repos/${this._GITHUB_REPOSITORY}/issues/${this._GITHUB_PR_NUMBER}/comments_`,
+      `https://api.github.com/repos/${this._GITHUB_REPOSITORY}/issues/${this._GITHUB_PR_NUMBER}/comments`,
       { headers: requestHeaders },
     ).then((res) => {
       if (!res.ok) {
@@ -54,7 +54,7 @@ export class GitHubNotifierPlugin
     });
     console.log(comments);
 
-    await fetch(
+    const result = await fetch(
       `https://api.github.com/repos/${this._GITHUB_REPOSITORY}/issues/${this._GITHUB_PR_NUMBER}/comments`,
       {
         method: 'post',
@@ -65,6 +65,8 @@ export class GitHubNotifierPlugin
       if (!res.ok) {
         throw new Error(`Failed to post comment: ${res.statusText}`);
       }
+      return res.json();
     });
+    console.log(result);
   }
 }
