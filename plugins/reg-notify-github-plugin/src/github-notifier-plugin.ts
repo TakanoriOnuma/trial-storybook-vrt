@@ -5,7 +5,7 @@ import {
   Logger,
 } from 'reg-suit-interface';
 
-import fetch from 'node-fetch';
+// import fetch from 'node-fetch';
 
 export interface GitHubPluginOption {
   /** PRにコメントするためのGitHub Token */
