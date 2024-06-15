@@ -44,7 +44,7 @@ export class GitHubNotifierPlugin
     };
 
     const comments = await fetch(
-      `https://api.github.com/repos/${this._GITHUB_REPOSITORY}/issues/${this._GITHUB_PR_NUMBER}/comments`,
+      `https://api.github.com/repos/${this._GITHUB_REPOSITORY}/issues/${this._GITHUB_PR_NUMBER}/comments_`,
       { headers: requestHeaders },
     ).then((res) => {
       if (!res.ok) {
