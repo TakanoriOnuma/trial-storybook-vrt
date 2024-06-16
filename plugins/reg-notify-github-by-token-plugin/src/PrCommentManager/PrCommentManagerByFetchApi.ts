@@ -30,10 +30,13 @@ export class PrCommentManagerByFetchApi extends AbstractPrCommentManager {
         .replace('{repo}', this._GITHUB_REPO_NAME)
         .replace('{issue_number}', prNumber.toString());
 
+    console.log(fullPath);
+
     const response = await fetch(fullPath, {
       method: methodType,
       headers: this._requestHeaders,
     }).then((res) => {
+      console.log(res);
       if (!res.ok) {
         throw new Error('Failed to fetch comments:' + res.statusText);
       }
@@ -41,6 +44,7 @@ export class PrCommentManagerByFetchApi extends AbstractPrCommentManager {
         Endpoints[`${typeof methodType} ${typeof templateUrl}`]['response']
       >;
     });
+    console.log(response);
     return response;
   }
 
