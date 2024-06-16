@@ -97,7 +97,6 @@ export class GitHubNotifierPlugin
     });
 
     const response = await prManager.fetchComments(this._GITHUB_PR_NUMBER);
-    console.log(response);
     const { data: comments } = response;
 
     /** 既にコメントしているかを判別するためのメッセージ */

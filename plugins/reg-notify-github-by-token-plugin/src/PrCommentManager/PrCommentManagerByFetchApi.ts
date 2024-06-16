@@ -30,21 +30,25 @@ export class PrCommentManagerByFetchApi extends AbstractPrCommentManager {
         .replace('{repo}', this._GITHUB_REPO_NAME)
         .replace('{issue_number}', prNumber.toString());
 
-    console.log(fullPath);
-
     const response = await fetch(fullPath, {
       method: methodType,
       headers: this._requestHeaders,
-    }).then((res) => {
+    }).then(async (res) => {
       console.log(res);
       if (!res.ok) {
         throw new Error('Failed to fetch comments:' + res.statusText);
       }
-      return res.json() as Promise<
-        Endpoints[`${typeof methodType} ${typeof templateUrl}`]['response']
-      >;
+      const data: Endpoints[`${typeof methodType} ${typeof templateUrl}`]['response']['data'] =
+        await res.json();
+      return {
+        data,
+        url: fullPath,
+        // とりあえず型が合うようにキャスト
+        status: 200 as const,
+        headers: res.headers as any,
+      };
     });
-    console.log(response);
+
     return response;
   }
 
@@ -64,14 +68,21 @@ export class PrCommentManagerByFetchApi extends AbstractPrCommentManager {
       method: methodType,
       body: JSON.stringify({ body }),
       headers: this._requestHeaders,
-    }).then((res) => {
+    }).then(async (res) => {
       if (!res.ok) {
         throw new Error('Failed to create comment:' + res.statusText);
       }
-      return res.json() as Promise<
-        Endpoints[`${typeof methodType} ${typeof templateUrl}`]['response']
-      >;
+      const data: Endpoints[`${typeof methodType} ${typeof templateUrl}`]['response']['data'] =
+        await res.json();
+      return {
+        data,
+        url: fullPath,
+        // とりあえず型が合うようにキャスト
+        status: 201 as const,
+        headers: res.headers as any,
+      };
     });
+
     return response;
   }
 
@@ -91,14 +102,21 @@ export class PrCommentManagerByFetchApi extends AbstractPrCommentManager {
       method: methodType,
       body: JSON.stringify({ body }),
       headers: this._requestHeaders,
-    }).then((res) => {
+    }).then(async (res) => {
       if (!res.ok) {
         throw new Error('Failed to update comment:' + res.statusText);
       }
-      return res.json() as Promise<
-        Endpoints[`${typeof methodType} ${typeof templateUrl}`]['response']
-      >;
+      const data: Endpoints[`${typeof methodType} ${typeof templateUrl}`]['response']['data'] =
+        await res.json();
+      return {
+        data,
+        url: fullPath,
+        // とりあえず型が合うようにキャスト
+        status: 200 as const,
+        headers: res.headers as any,
+      };
     });
+
     return response;
   }
 }
