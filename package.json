@@ -1,16 +1,23 @@
 {
   "name": "trial-storybook-vrt",
+  "private": true,
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "author": "",
   "license": "MIT",
+  "workspaces": [
+    "plugins/*"
+  ],
   "scripts": {
     "preinstall": "npx only-allow npm",
     "storybook": "storybook dev -p 7100",
     "storybook:build": "storybook build",
     "storybook-vrt:storycap": "storycap --serverCmd 'npx http-server storybook-static -p 9001' http://localhost:9001",
-    "storybook-vrt:reg-suit": "reg-suit run"
+    "storybook-vrt:reg-suit": "reg-suit run",
+    "storybook-vrt:reg-suit_sync-expected": "reg-suit sync-expected",
+    "storybook-vrt:reg-suit_compare": "reg-suit compare",
+    "storybook-vrt:reg-suit_publish": "reg-suit publish -n"
   },
   "dependencies": {
     "react": "^18.2.0",

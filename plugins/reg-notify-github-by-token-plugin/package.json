@@ -1,0 +1,14 @@
+{
+  "name": "@reg-plugins/reg-notify-github-by-token-plugin",
+  "private": true,
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json"
+  },
+  "dependencies": {
+    "@octokit/rest": "^20.1.1"
+  },
+  "devDependencies": {
+    "reg-suit-interface": "^0.14.2"
+  }
+}

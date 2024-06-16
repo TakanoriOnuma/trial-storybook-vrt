@@ -84,6 +84,10 @@ jobs:
     runs-on: ubuntu-22.04
     timeout-minutes: 10
 
+    permissions:
+      contents: read
+      pull-requests: write
+
     steps:
       - uses: actions/checkout@v4
         with:
@@ -115,5 +119,13 @@ jobs:
         with:
           project_id: 'trial-storybook-vrt'
 
+      - name: Build Plugin
+        run: npm run -w @reg-plugins/reg-notify-github-by-token-plugin build
+
       - name: Run Reg-Suit
         run: npm run storybook-vrt:reg-suit
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPO_OWNER: ${{ github.repository_owner }}
+          GITHUB_REPO_NAME: ${{ github.event.repository.name }}
+          GITHUB_PR_NUMBER: ${{ github.event.number }}

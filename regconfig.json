@@ -10,12 +10,12 @@
   },
   "plugins": {
     "reg-keygen-git-hash-plugin": true,
-    "reg-notify-github-plugin": {
-      "prComment": true,
-      "prCommentBehavior": "default",
-      "setCommitStatus": false,
-      "shortDescription": true,
-      "clientId": "Mze3NDUytjSw1C8pykzM0S0uyS+qTMrPz9YtKyrRN7E0MDUwMjHSD0nMTszLL8r0zyvNTQQA"
+    "@reg-plugins/reg-notify-github-by-token-plugin": {
+      "GITHUB_TOKEN": "${GITHUB_TOKEN}",
+      "GITHUB_REPO_OWNER": "${GITHUB_REPO_OWNER}",
+      "GITHUB_REPO_NAME": "${GITHUB_REPO_NAME}",
+      "GITHUB_PR_NUMBER": "${GITHUB_PR_NUMBER}",
+      "section": "trial"
     },
     "reg-publish-gcs-plugin": {
       "bucketName": "trial-numa-storybook-vrt"
