@@ -19,7 +19,6 @@ export class PrCommentManagerByFetchApi extends AbstractPrCommentManager {
   }
 
   async fetchComments(prNumber: number) {
-    console.log('fetch APIでコメントを取得します');
     const methodType = 'GET' as const;
     const templateUrl =
       '/repos/{owner}/{repo}/issues/{issue_number}/comments' as const;
@@ -34,7 +33,6 @@ export class PrCommentManagerByFetchApi extends AbstractPrCommentManager {
       method: methodType,
       headers: this._requestHeaders,
     }).then(async (res) => {
-      console.log(res);
       if (!res.ok) {
         throw new Error('Failed to fetch comments:' + res.statusText);
       }
@@ -53,7 +51,6 @@ export class PrCommentManagerByFetchApi extends AbstractPrCommentManager {
   }
 
   async createComment(prNumber: number, body: string) {
-    console.log('fetch APIでコメントを作成します');
     const methodType = 'POST' as const;
     const templateUrl =
       '/repos/{owner}/{repo}/issues/{issue_number}/comments' as const;
@@ -87,7 +84,6 @@ export class PrCommentManagerByFetchApi extends AbstractPrCommentManager {
   }
 
   async updateComment(commentId: number, body: string) {
-    console.log('fetch APIでコメントを更新します');
     const methodType = 'PATCH' as const;
     const templateUrl =
       '/repos/{owner}/{repo}/issues/comments/{comment_id}' as const;
