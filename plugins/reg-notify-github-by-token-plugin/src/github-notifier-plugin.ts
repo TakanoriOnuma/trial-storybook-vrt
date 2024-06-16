@@ -88,6 +88,10 @@ export class GitHubNotifierPlugin
   }
 
   async notify(params: NotifyParams): Promise<any> {
+    if (Number.isNaN(this._GITHUB_PR_NUMBER)) {
+      this._logger.info('PR番号が不正なため、コメントをスキップします。');
+      return;
+    }
     const { comparisonResult, reportUrl } = params;
 
     const prManager: AbstractPrCommentManager = new PrCommentManagerByFetchApi({
