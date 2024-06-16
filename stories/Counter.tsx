@@ -20,7 +20,7 @@ export const Counter: FC<CounterProps> = ({ count, onChangeCount }) => {
       >
         -
       </button>
-      <span style={{ padding: '0 10px' }}>{count}</span>
+      <span style={{ padding: '0 5px' }}>{count}</span>
       <button
         onClick={() => {
           onChangeCount(count + 1);
