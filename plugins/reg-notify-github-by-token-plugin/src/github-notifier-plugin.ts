@@ -8,7 +8,9 @@ import {
 
 import {
   AbstractPrCommentManager,
-  PrCommentManagerByOctokit,
+  // 下のどちらかを使ってPRのコメントを操作する
+  // PrCommentManagerByOctokit,
+  PrCommentManagerByFetchApi,
 } from './PrCommentManager';
 
 /**
@@ -88,7 +90,7 @@ export class GitHubNotifierPlugin
   async notify(params: NotifyParams): Promise<any> {
     const { comparisonResult, reportUrl } = params;
 
-    const prManager: AbstractPrCommentManager = new PrCommentManagerByOctokit({
+    const prManager: AbstractPrCommentManager = new PrCommentManagerByFetchApi({
       GITHUB_TOKEN: this._GITHUB_TOKEN,
       GITHUB_REPO_NAME: this._GITHUB_REPO_NAME,
       GITHUB_REPO_OWNER: this._GITHUB_REPO_OWNER,
