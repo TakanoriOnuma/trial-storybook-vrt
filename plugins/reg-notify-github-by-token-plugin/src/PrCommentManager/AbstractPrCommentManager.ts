@@ -37,7 +37,9 @@ export abstract class AbstractPrCommentManager {
    * 該当のPRのコメント一覧を取得する
    * @param prNumber - PR番号
    */
-  abstract fetchComments(prNumber: number): Promise<FetchCommentsResponse>;
+  abstract fetchComments(
+    prNumber: number,
+  ): Promise<FetchCommentsResponse['data']>;
 
   /**
    * 該当のPRにコメントを追加する
@@ -47,7 +49,7 @@ export abstract class AbstractPrCommentManager {
   abstract createComment(
     prNumber: number,
     body: string,
-  ): Promise<CreateCommentResponse>;
+  ): Promise<CreateCommentResponse['data']>;
 
   /**
    * 該当のコメントを更新する
@@ -57,5 +59,5 @@ export abstract class AbstractPrCommentManager {
   abstract updateComment(
     commentId: number,
     body: string,
-  ): Promise<UpdateCommentResponse>;
+  ): Promise<UpdateCommentResponse['data']>;
 }

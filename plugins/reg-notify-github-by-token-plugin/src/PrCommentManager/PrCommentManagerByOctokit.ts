@@ -14,28 +14,31 @@ export class PrCommentManagerByOctokit extends AbstractPrCommentManager {
   }
 
   async fetchComments(prNumber: number) {
-    return this._octokit.issues.listComments({
+    const { data } = await this._octokit.issues.listComments({
       owner: this._GITHUB_REPO_OWNER,
       repo: this._GITHUB_REPO_NAME,
       issue_number: prNumber,
     });
+    return data;
   }
 
   async createComment(prNumber: number, body: string) {
-    return this._octokit.issues.createComment({
+    const { data } = await this._octokit.issues.createComment({
       owner: this._GITHUB_REPO_OWNER,
       repo: this._GITHUB_REPO_NAME,
       issue_number: prNumber,
       body,
     });
+    return data;
   }
 
   async updateComment(commentId: number, body: string) {
-    return this._octokit.issues.updateComment({
+    const { data } = await this._octokit.issues.updateComment({
       owner: this._GITHUB_REPO_OWNER,
       repo: this._GITHUB_REPO_NAME,
       comment_id: commentId,
       body,
     });
+    return data;
   }
 }
