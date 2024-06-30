@@ -118,13 +118,17 @@ export class GitHubNotifierPlugin
 
     if (existingComment) {
       const result = await prManager.updateComment(existingComment.id, message);
-      this._logger.info('VRTレポートコメントを作成しました:' + result.html_url);
+      this._logger.info(
+        'VRTレポートコメントを更新しました: ' + result.html_url,
+      );
     } else {
       const result = await prManager.createComment(
         this._GITHUB_PR_NUMBER,
         message,
       );
-      this._logger.info('VRTレポートコメントを更新しました:' + result.html_url);
+      this._logger.info(
+        'VRTレポートコメントを作成しました: ' + result.html_url,
+      );
     }
   }
 }
