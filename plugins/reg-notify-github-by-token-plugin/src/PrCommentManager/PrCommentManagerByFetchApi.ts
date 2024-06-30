@@ -38,13 +38,7 @@ export class PrCommentManagerByFetchApi extends AbstractPrCommentManager {
       }
       const data: Endpoints[`${typeof methodType} ${typeof templateUrl}`]['response']['data'] =
         await res.json();
-      return {
-        data,
-        url: fullPath,
-        // とりあえず型が合うようにキャスト
-        status: 200 as const,
-        headers: res.headers as any,
-      };
+      return data;
     });
 
     return response;
@@ -71,13 +65,7 @@ export class PrCommentManagerByFetchApi extends AbstractPrCommentManager {
       }
       const data: Endpoints[`${typeof methodType} ${typeof templateUrl}`]['response']['data'] =
         await res.json();
-      return {
-        data,
-        url: fullPath,
-        // とりあえず型が合うようにキャスト
-        status: 201 as const,
-        headers: res.headers as any,
-      };
+      return data;
     });
 
     return response;
@@ -104,13 +92,7 @@ export class PrCommentManagerByFetchApi extends AbstractPrCommentManager {
       }
       const data: Endpoints[`${typeof methodType} ${typeof templateUrl}`]['response']['data'] =
         await res.json();
-      return {
-        data,
-        url: fullPath,
-        // とりあえず型が合うようにキャスト
-        status: 200 as const,
-        headers: res.headers as any,
-      };
+      return data;
     });
 
     return response;
