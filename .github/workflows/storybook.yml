@@ -99,6 +99,14 @@ jobs:
           node-version-file: 'package.json'
           cache: 'npm'
 
+      - uses: ./.github/actions/get-reg-key
+        id: get-reg-key
+
+      - name: debug
+        run: |
+          echo ${{ steps.get-reg-key.outputs.expected-key }}
+          echo ${{ steps.get-reg-key.outputs.actual-key }}
+
       - name: Install dependencies
         run: npm install
 
@@ -112,7 +120,7 @@ jobs:
 
       - uses: google-github-actions/auth@v2
         with:
-          credentials_json: ${{ secrets.GCP_CREDENTIALS}}
+          credentials_json: ${{ secrets.GCP_CREDENTIALS }}
 
       - name: Set up GCP credential
         uses: google-github-actions/setup-gcloud@v2
