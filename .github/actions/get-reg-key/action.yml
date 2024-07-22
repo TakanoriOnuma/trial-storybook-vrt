@@ -17,11 +17,11 @@ runs:
       id: get-reg-key
       run: |
         if [[ "$GITHUB_EVENT_NAME" = "pull_request" ]]; then
-          echo "expected-key=pr_$BASE_SHA" >> $GITHUB_OUTPUT
-          echo "actual-key=pr_$GITHUB_SHA" >> $GITHUB_OUTPUT
+          echo "expected-key=pr_${{ github.event.pull_request.base.sha }}" >> $GITHUB_OUTPUT
+          echo "actual-key=pr_${{ github.event.pull_request.head.sha }}" >> $GITHUB_OUTPUT
         else
           PREV_SHA=$(git rev-parse HEAD^)
           echo "expected-key=push_$PREV_SHA" >> $GITHUB_OUTPUT
-          echo "actual-key=push_$GITHUB_SHA" >> $GITHUB_OUTPUT
+          echo "actual-key=push_${{ github.sha }}" >> $GITHUB_OUTPUT
         fi
       shell: bash
