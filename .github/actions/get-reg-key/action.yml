@@ -4,10 +4,10 @@ description: reg-suitで差分チェックするためのキーを取得する
 outputs:
   expected-key:
     description: '期待値のデータを持つスナップショットキー'
-    required: true
+    value: ${{ steps.get-reg-key.outputs.expected-key }}
   actual-key:
     description: '実際のデータを持つスナップショットキー'
-    required: true
+    value: ${{ steps.get-reg-key.outputs.actual-key }}
 
 runs:
   using: composite
@@ -16,9 +16,9 @@ runs:
     - name: Get Reg Key
       id: get-reg-key
       run: |
-        if [[ $GITHUB_EVENT_NAME == 'pull_request' ]]; then
+        if [[ "$GITHUB_EVENT_NAME" = "pull_request" ]]; then
           echo "expected-key=pr_$BASE_SHA" >> $GITHUB_OUTPUT
-          echo "actual-key=pr_$HEAD_SHA" >> $GITHUB_OUTPUT
+          echo "actual-key=pr_$GITHUB_SHA" >> $GITHUB_OUTPUT
         else
           PREV_SHA=$(git rev-parse HEAD^)
           echo "expected-key=push_$PREV_SHA" >> $GITHUB_OUTPUT
