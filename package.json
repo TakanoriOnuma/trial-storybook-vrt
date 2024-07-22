@@ -37,6 +37,7 @@
     "reg-keygen-git-hash-plugin": "^0.14.3",
     "reg-notify-github-plugin": "^0.14.3",
     "reg-publish-gcs-plugin": "^0.14.3",
+    "reg-simple-keygen-plugin": "^0.14.2",
     "reg-suit": "^0.14.3",
     "storybook": "^8.0.5",
     "storycap": "^5.0.0",

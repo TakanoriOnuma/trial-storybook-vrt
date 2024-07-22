@@ -99,14 +99,6 @@ jobs:
           node-version-file: 'package.json'
           cache: 'npm'
 
-      - uses: ./.github/actions/get-reg-key
-        id: get-reg-key
-
-      - name: debug
-        run: |
-          echo ${{ steps.get-reg-key.outputs.expected-key }}
-          echo ${{ steps.get-reg-key.outputs.actual-key }}
-
       - name: Install dependencies
         run: npm install
 
@@ -130,9 +122,14 @@ jobs:
       - name: Build Plugin
         run: npm run -w @reg-plugins/reg-notify-github-by-token-plugin build
 
+      - uses: ./.github/actions/get-reg-key
+        id: get-reg-key
+
       - name: Run Reg-Suit
         run: npm run storybook-vrt:reg-suit
         env:
+          EXPECTED_KEY: ${{ steps.get-reg-key.outputs.expected-key }}
+          ACTUAL_KEY: ${{ steps.get-reg-key.outputs.actual-key }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPO_OWNER: ${{ github.repository_owner }}
           GITHUB_REPO_NAME: ${{ github.event.repository.name }}
