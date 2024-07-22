@@ -94,6 +94,12 @@ jobs:
           fetch-depth: 0
           ref: ${{ github.head_ref || github.ref_name }}
 
+      - name: Log
+        run: git branch -a
+        env:
+          GITHUB_HEAD_REF: ${{ github.head_ref }}
+          GITHUB_REF_NAME: ${{ github.ref_name }}
+
       - uses: actions/setup-node@v4
         with:
           node-version-file: 'package.json'
