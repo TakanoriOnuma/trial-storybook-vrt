@@ -24,3 +24,4 @@ runs:
           echo "expected-key=push_$PREV_SHA" >> $GITHUB_OUTPUT
           echo "actual-key=push_$GITHUB_SHA" >> $GITHUB_OUTPUT
         fi
+      shell: bash
