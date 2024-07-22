@@ -112,7 +112,7 @@ jobs:
 
       - uses: google-github-actions/auth@v2
         with:
-          credentials_json: ${{ secrets.GCP_CREDENTIALS}}
+          credentials_json: ${{ secrets.GCP_CREDENTIALS }}
 
       - name: Set up GCP credential
         uses: google-github-actions/setup-gcloud@v2
@@ -122,9 +122,14 @@ jobs:
       - name: Build Plugin
         run: npm run -w @reg-plugins/reg-notify-github-by-token-plugin build
 
+      - uses: ./.github/actions/get-reg-key
+        id: get-reg-key
+
       - name: Run Reg-Suit
         run: npm run storybook-vrt:reg-suit
         env:
+          EXPECTED_KEY: ${{ steps.get-reg-key.outputs.expected-key }}
+          ACTUAL_KEY: ${{ steps.get-reg-key.outputs.actual-key }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPO_OWNER: ${{ github.repository_owner }}
           GITHUB_REPO_NAME: ${{ github.event.repository.name }}

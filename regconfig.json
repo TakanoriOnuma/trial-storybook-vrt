@@ -9,7 +9,10 @@
     }
   },
   "plugins": {
-    "reg-keygen-git-hash-plugin": true,
+    "reg-simple-keygen-plugin": {
+      "expectedKey": "${EXPECTED_KEY}",
+      "actualKey": "${ACTUAL_KEY}"
+    },
     "@reg-plugins/reg-notify-github-by-token-plugin": {
       "GITHUB_TOKEN": "${GITHUB_TOKEN}",
       "GITHUB_REPO_OWNER": "${GITHUB_REPO_OWNER}",
